@@ -101,8 +101,9 @@ def calc_postshock(gas, U1, rtol=1e-10):
     return U1*r1 / gas.density
 
 
+# Here is the main ODE solver
 class ReactorOde(object):
-    def __init__(self, gas, L, As, A1, area_change):
+    def __init__(self, gas, rhoI, L, As, A1, area_change):
         # Parameters of the ODE system and auxiliary data are stored in the
         # ReactorOde object.
         self.gas = gas
@@ -113,6 +114,7 @@ class ReactorOde(object):
         self.n = 0.5
         self.Wk = self.gas.molecular_weights
         self.rho1 = gas.density
+        self.rhoI = rhoI        #initial density
         self.delta_dA = 1 if area_change else 0
 
     def __call__(self, t, y):
@@ -133,17 +135,20 @@ class ReactorOde(object):
 
         ydot = np.zeros(self.N)
         ydot[0] = v # dz/dt
-        ydot[1] = (self.delta_dA * v * self.As*self.n/self.L
-                   * xi**(self.n-1.0)/(1.0-xi**self.n)**2.0) # dA/dt
+        ydot[1] = self.delta_dA * v * self.As*self.n/self.L * xi**(self.n-1.0)/(1.0-xi**self.n)**2.0 # dA/dt
         ydot[6:] = wdot * self.Wk / rho # dYk/dt
-        ydot[2] = 1/(1+beta) * (sum((hk/(cp*T) - Wmix) * wdot)
-                                - rho*beta/A * ydot[1]) # drho/dt
+        ydot[2] = 1/(1+beta) * (sum((hk/(cp*T) - Wmix) * wdot) - rho*beta/A * ydot[1]) # drho/dt
         ydot[3] = - v * (ydot[2]/rho + ydot[1]/A) # dv/dt
         ydot[4] = - (np.dot(wdot, hk)/rho + v*ydot[3]) / cp # dT/dt
-        ydot[5] = self.rho1*self.A1 / (rho*A) # dt_lab/dt
+        ydot[5] = self.rhoI*self.A1 / (rho*A) # dt_lab/dt
 
         return ydot
 
+    #--------------------------------------------------------------------------------
+    # POST PROCESSING
+    #--------------------------------------------------------------------------------
+
+    # compute the density gradient from the solution
     def drhodz(self, t, y):
         z, A, rho, v, T, tlab = y[:6]
         self.gas.set_unnormalized_mass_fractions(y[6:])
@@ -156,6 +161,33 @@ class ReactorOde(object):
         beta = v**2 * (1.0/(cp*T) - Wmix / (ct.gas_constant * T))
         xi = max(z / self.L, 1e-10)
 
-        dAdt = (self.delta_dA * v * self.As*self.n/self.L
-               * xi**(self.n-1.0)/(1.0-xi**self.n)**2.0) # dA/dt
+        dAdt = self.delta_dA * v * self.As*self.n/self.L * xi**(self.n-1.0)/(1.0-xi**self.n)**2.0 # dA/dt
+
         return 1/v/(1+beta) * (sum((hk/(cp*T) - Wmix) * wdot) - rho*beta/A * dAdt)
+
+    # compute the contribution of each reaction to the density gradient
+    def drhodz_per_rxn(self, t, y):
+        z, A, rho, v, T, tlab = y[:6]
+        self.gas.set_unnormalized_mass_fractions(y[6:])
+        self.gas.TD = T, rho
+        cp = self.gas.cp_mass
+        Wmix = self.gas.mean_molecular_weight
+        hk = self.gas.partial_molar_enthalpies
+        wdot = self.gas.net_production_rates
+
+        beta = v**2 * (1.0/(cp*T) - Wmix / (ct.gas_constant * T))
+        xi = max(z / self.L, 1e-10)
+
+        dAdt = self.delta_dA * v * self.As*self.n/self.L * xi**(self.n-1.0)/(1.0-xi**self.n)**2.0 # dA/dt
+
+        per_rxn = np.zeros(gas.n_reactions)
+        rj = gas.net_rates_of_progress
+        hj = gas.delta_enthalpy
+        nu_fwd = gas.product_stoich_coeffs()
+        nu_rev = gas.reactant_stoich_coeffs()
+
+        for j in range(gas.n_reactions):
+            delta_Nj = sum(nu_fwd[:,j]) - sum(nu_rev[:,j])
+            per_rxn[j] = 1/v/(1+beta) * ( rj[j] * ( hj[j] / (cp*T)  - Wmix * delta_Nj)  - rho*beta/A * dAdt) 
+
+        return per_rxn
