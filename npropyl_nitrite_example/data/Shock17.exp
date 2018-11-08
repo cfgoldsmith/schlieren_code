@@ -1,0 +1,130 @@
+[Date]
+Date="4/21/2016;11:31 AM"
+
+[File Info]
+Expt="Shock17"
+File Path="/Z/Laser Schlieren/Experimental/Data/Propyl nitrite/2%_Propyl_Nitrite_98%_Kr_Apr_2016 - 27 Apr Recalc"
+
+[Mixture]
+NumMols=3    
+Mol_0_Name="Krypton"
+Mol_0_Formula="Kr"
+Mol_0_Manf="Aga"
+Mol_0_Date Pur="Sept 2011"
+Mol_0_Purity="99.999%"
+Mol_0_Comments="none"
+Mol_0_Mol frc=0.980    
+Mol_0_Pressure=98.00    
+Mol_0_Rmm=83.80    
+Mol_0_Mol Refrac=6.3700    
+Mol_0_Hf298=0.000000E+0    
+Mol_0_Hf298-0=1.480000E+3    
+Mol_0_a=2.498700E+0    
+Mol_0_b=6.396300E+0    
+Mol_0_c=-2.022700E+4    
+Mol_0_d=2.504300E+7    
+Mol_0_e=-1.091100E+10    
+Mol_0_f=4.385300E+0    
+Mol_0_Structure=0    
+Mol_0_No Int Rot=0    
+Mol_1_Name="Propyl nitrite"
+Mol_1_Formula="C3H7ONO"
+Mol_1_Manf="John Randazzo"
+Mol_1_Date Pur="N/A"
+Mol_1_Purity="N/A"
+Mol_1_Comments="Synthesized from propanol and sodium nitrite with HCl"
+Mol_1_Mol frc=0.020    
+Mol_1_Pressure=2.00    
+Mol_1_Rmm=89.05    
+Mol_1_Mol Refrac=21.8000    
+Mol_1_Hf298=-2.860900E+4    
+Mol_1_Hf298-0=5.000000E+3    
+Mol_1_a=4.043200E+1    
+Mol_1_b=-4.137600E+4    
+Mol_1_c=2.478500E+7    
+Mol_1_d=-7.265500E+9    
+Mol_1_e=8.073600E+11    
+Mol_1_f=-2.185600E+2    
+Mol_1_Structure=2    
+Mol_1_No Int Rot=0    
+Mol_2_Name=""
+Mol_2_Formula=""
+Mol_2_Manf=""
+Mol_2_Date Pur=""
+Mol_2_Purity=""
+Mol_2_Comments=""
+Mol_2_Mol frc=0.000
+Mol_2_Pressure=0.00
+Mol_2_Rmm=0.00
+Mol_2_Mol Refrac=0.0000
+Mol_2_Hf298=0.000000E+0
+Mol_2_Hf298-0=0.000000E+0
+Mol_2_a=0.000000E+0
+Mol_2_b=0.000000E+0
+Mol_2_c=0.000000E+0
+Mol_2_d=0.000000E+0
+Mol_2_e=0.000000E+0
+Mol_2_f=0.000000E+0
+Mol_2_Structure=0
+Mol_2_No Int Rot=0
+
+[t0Corr]
+DtCurv=0.317624    
+Dels=0.171216    
+Dett=0.296287    
+Date Tauc=0.037617    
+TimC=0.021337    
+Fact=9718777.461774    
+
+[BBCorr]
+M^2=0.000000E+0    
+M1Sqr=0.000000E+0    
+Rho2Alpha1=0.000000E+0    
+DRho=0.000000E+0    
+GammAlpha=0.000000E+0    
+CpAlpha=0.000000E+0    
+
+[PostShk]
+T2=736.05    
+P2=65.95    
+U2=18109.71    
+Rho2=0.00    
+T5=1265.70    
+P5=271.48    
+U5=7565.50    
+Rho5=0.00    
+
+[Lights]
+Trans Err=FALSE    
+Triggered=TRUE    
+TrigTimeOut=FALSE    
+Captured=TRUE    
+BusyTimeOut=FALSE    
+
+[BaseLineVals]
+V0=41.133    
+Tc=9.940    
+Amin=1346.200    
+IVMax=6433.036    
+Index=517.000    
+
+[Expt Params]
+P1=9.000000    
+T1=20.200000    
+P4=3.700000    
+tOpt=226.881250    
+PT Spacing=120.000000    
+Times="226.950000;226.700000;226.900000;226.975000"
+dV/dt=9.393333    
+Gain=1.000000    
+SampRate=50000000.000000    
+PBellows=40.000000    
+Range_Cal=4    
+Range_Shk=4    
+
+[Tube Params]
+Beam radius=0.30    
+Lm=311.0    
+Lt=320.0    
+Period=1.666670E+7    
+TubeDia=6.350    
